@@ -3,8 +3,8 @@ We’ll be building a web application called Snippetbox, which lets people paste
 
 A user is able save and view snippets via the app. Here, we learn how to structure a project, routing requests, working with a database, processing forms and displaying dynamic data safely.Then later we’ll add user accounts, and restrict the application so that only registered users can create snippets. This will take us through more advanced topics like configuring a HTTPS server, session management, user authentication and middleware.
 
-Touch Points:
-- # All the fundamentals  — How to start a server, create handlers, send responses, route requests and serve static files.
+## Touch Points:
+- All the fundamentals  — How to start a server, create handlers, send responses, route requests and serve static files.
 - Structure and organization — How to create an idiomatic and scalable structure for your web application.
 - Using Modules — How to use Go's Module functionality to manage and version control your dependencies.
 - Managing configuration — How to use command-line flags and dependency injection to manage your application settings.
