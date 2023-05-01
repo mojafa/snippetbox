@@ -31,6 +31,8 @@ func createSnippet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
+	w.Header()["X-XSS-Protection"] = []string{"1; mode=block"}
+	w.Header()["Date"] = nil
 	w.Write([]byte("Create a new snippet..."))
 }
 
