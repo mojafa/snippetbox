@@ -57,3 +57,7 @@ func createSnippet(w http.ResponseWriter, r *http.Request) {
 	w.Header()["Date"] = nil
 	w.Write([]byte("Create a new snippet..."))
 }
+
+func downloadHandler(w http.ResponseWriter, r *http.Request){
+	http.ServeFile(w,r,"./ui/static/file.zip")
+}
