@@ -1,12 +1,15 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 	"path/filepath"
 )
 
 func main() {
+	addr := flag.String("addr", ":4000", "HTTP network address")
+	flag.Parse()
 	//locally scoped servemux.
 	//This is a good practice to avoid polluting the global namespace.
 	mux := http.NewServeMux()
@@ -20,8 +23,8 @@ func main() {
 	mux.Handle("/static", http.NotFoundHandler())
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
 	//Use the mux.Handle() function to register the file server as the handler for // all URL paths that start with "/static/". For matching paths, we strip the // "/static" prefix before the request reaches the file server.
-	log.Println("Starting on server on port 4000")
-	err := http.ListenAndServe(":4000", mux)
+	log.Printf("Starting server on %s",*addr)
+	err := http.ListenAndServe(*addr, mux)
 	log.Fatal(err)
 }
 
