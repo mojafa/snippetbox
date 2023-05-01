@@ -19,6 +19,9 @@ func showSnippet(w http.ResponseWriter, r *http.Request) {
 
 func createSnippet(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
+		w.Header().Set("Allow", http.MethodPost)
+		// to send a non-200 status code,
+		// you must call w.WriteHeader() before any call to w.Write().
 		w.WriteHeader(405)
 		w.Write([]byte("Method Not Allowed"))
 		return
