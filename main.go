@@ -22,6 +22,8 @@ func createSnippet(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	//locally scoped servemux.
+	//This is a good practice to avoid polluting the global namespace.
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", home)
 	mux.HandleFunc("/snippet", showSnippet)
