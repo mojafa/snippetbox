@@ -4,12 +4,22 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 )
 
 func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	flag.Parse()
+
+
+	f, err := os.OpenFile("/tmp/info.log",os.O_RDWR|os.O_CREATE, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime|log.LUTC)
+	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.LUTC|log.Lshortfile)
 	//locally scoped servemux.
 	//This is a good practice to avoid polluting the global namespace.
 	mux := http.NewServeMux()
@@ -23,9 +33,16 @@ func main() {
 	mux.Handle("/static", http.NotFoundHandler())
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
 	//Use the mux.Handle() function to register the file server as the handler for // all URL paths that start with "/static/". For matching paths, we strip the // "/static" prefix before the request reaches the file server.
-	log.Printf("Starting server on %s",*addr)
-	err := http.ListenAndServe(*addr, mux)
-	log.Fatal(err)
+
+	srv := &http.Server{
+		Addr: *addr,
+		ErrorLog: errorLog,
+		Handler: mux,
+	}
+
+	infoLog.Printf("Starting server on %s", *addr)
+	err := srv.ListenAndServe()
+	errorLog.Fatal(err)
 }
 
 type neuteredFileSystem struct {
