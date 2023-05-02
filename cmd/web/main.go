@@ -16,13 +16,6 @@ type application struct {
 func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	flag.Parse()
-
-	// f, err := os.OpenFile("/tmp/info.log", os.O_RDWR|os.O_CREATE, 0666)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// defer f.Close()
-
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime|log.LUTC)
 	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.LUTC|log.Lshortfile)
 
@@ -30,9 +23,6 @@ func main() {
 		errorLog: errorLog,
 		infoLog:  infoLog,
 	}
-
-	//locally scoped servemux.
-
 	srv := &http.Server{
 		Addr:     *addr,
 		ErrorLog: errorLog,
