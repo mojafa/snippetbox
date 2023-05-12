@@ -53,6 +53,22 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 	w.Header()["X-XSS-Protection"] = []string{"1; mode=block"}
 	w.Header()["Date"] = nil
 	w.Write([]byte("Create a new snippet..."))
+	// Create some variables holding dummy data. We'll remove these later on
+	// 	during the build.
+	title := "1984"
+	content := "George Orwells best big brother"
+	expires := "7"
+
+	// Pass the data to the SnippetModel.Insert() method, receiving the
+	// ID of the new record back.
+	id, err := app.snippets.Insert(title, content, expires)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	// Redirect the user to the relevant page for the snippet.
+	http.Redirect(w, r, fmt.Sprintf("/snippet?id=%id", id), http.StatusSeeOther)
+
 }
 
 func downloadHandler(w http.ResponseWriter, r *http.Request) {
