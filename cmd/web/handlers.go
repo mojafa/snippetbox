@@ -49,10 +49,10 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusMethodNotAllowed)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Header()["X-XSS-Protection"] = []string{"1; mode=block"}
-	w.Header()["Date"] = nil
-	w.Write([]byte("Create a new snippet..."))
+	// w.Header().Set("Content-Type", "application/json")
+	// w.Header()["X-XSS-Protection"] = []string{"1; mode=block"}
+	// w.Header()["Date"] = nil
+	// w.Write([]byte("Create a new snippet..."))
 	// Create some variables holding dummy data. We'll remove these later on
 	// 	during the build.
 	title := "1984"
@@ -67,7 +67,7 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Redirect the user to the relevant page for the snippet.
-	http.Redirect(w, r, fmt.Sprintf("/snippet?id=%id", id), http.StatusSeeOther)
+	http.Redirect(w, r, fmt.Sprintf("/snippet?id=%d", id), http.StatusSeeOther)
 
 }
 
