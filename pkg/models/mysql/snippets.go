@@ -32,6 +32,7 @@ func (m *SnippetModel) Insert(title, content, expires string) (int, error) {
 
 // This will return a specific snippet based on its id.
 func (m *SnippetModel) Get(id int) (*models.Snippet, error) {
+	stmt 
 	return nil, nil
 }
 
