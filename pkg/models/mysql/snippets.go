@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"database/sql"
+	"errors"
 	"mojafa/snippetbox/pkg/models"
 )
 
@@ -32,8 +33,28 @@ func (m *SnippetModel) Insert(title, content, expires string) (int, error) {
 
 // This will return a specific snippet based on its id.
 func (m *SnippetModel) Get(id int) (*models.Snippet, error) {
-	stmt 
-	return nil, nil
+	stmt := `SELECT id, title, content, created, expires FROM snippets
+	WHERE expires > UTC_TIMESTAMP() AND id = ?`
+	row := m.DB.QueryRow(stmt, id)
+	// Initialize a pointer to a new zeroed Snippet struct.
+	s := &models.Snippet{}
+
+	// Use row.Scan() to copy the values from each field in sql.Row to the
+	// corresponding field in the Snippet struct. Notice that the arguments
+	// to row.Scan are *pointers* to the place you want to copy the data into, // and the number of arguments must be exactly the same as the number of // columns returned by your statement.
+	err := row.Scan(&s.ID, &s.Title, &s.Content, &s.Created, &s.Expires)
+	if err != nil {
+		// If the query returns no rows, then row.Scan() will return a
+		// sql.ErrNoRows error. We use the errors.Is() function check for that // error specifically, and return our own models.ErrNoRecord error
+		// instead.
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, models.ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+	// If everything went OK then return the Snippet object.
+	return s, nil
 }
 
 // This will return the 10 most recently created snippets.
