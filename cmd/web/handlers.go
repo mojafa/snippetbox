@@ -29,27 +29,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err) //use serverError helper
 	}
 }
-func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil || id < 1 {
-		app.notFound(w)
-		return
-	}
-	// Use the SnippetModel object's Get method to retrieve the data for a // specific record based on its ID. If no matching record is found,
-	// return a 404 Not Found response.
-	s, err := app.snippets.Get(id)
-	if err != nil {
-		if errors.Is(err, models.ErrNoRecord) {
-			app.notFound(w)
-		} else {
-			app.serverError(w, err)
-		}
-		return
-	}
-	// Write the snippet data as a plain-text HTTP response body.
-	fmt.Fprintf(w, "%v", s)
-	// fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
-}
+
 
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -87,7 +67,29 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 	}
 	// Redirect the user to the relevant page for the snippet.
 	http.Redirect(w, r, fmt.Sprintf("/snippet?id=%d", id), http.StatusSeeOther)
+}
 
+func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		app.notFound(w)
+		return
+	}
+	// Use the SnippetModel object's Get method to retrieve the data for a 
+	// specific record based on its ID. If no matching record is found,
+	// return a 404 Not Found response.
+	s, err := app.snippets.Get(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+	// Write the snippet data as a plain-text HTTP response body.
+	fmt.Fprintf(w, "%v", s)
+	// fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
 }
 
 // func downloadHandler(w http.ResponseWriter, r *http.Request) {
