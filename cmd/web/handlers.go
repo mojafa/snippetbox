@@ -6,6 +6,7 @@ import (
 	"mojafa/snippetbox/pkg/models"
 	"net/http"
 	"strconv"
+	"text/template"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -23,22 +24,22 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	for _, snippet := range s {
 		fmt.Fprintf(w, "%v\n", snippet)
 	}
-}
 
-// files := []string{
-// 	"./ui/html/home.page.tmpl",
-// 	"./ui/html/base.layout.tmpl",
-// 	"./ui/html/footer.partial.tmpl",
-// }
-// ts, err := template.ParseFiles(files...)
-// if err != nil {
-// 	app.serverError(w, err) //use serverError helper
-// 	return
-// }
-// err = ts.Execute(w, nil)
-// if err != nil {
-// 	app.serverError(w, err) //use serverError helper
-// }
+	// files := []string{
+	// 	"./ui/html/home.page.tmpl",
+	// 	"./ui/html/base.layout.tmpl",
+	// 	"./ui/html/footer.partial.tmpl",
+	// }
+	// ts, err := template.ParseFiles(files...)
+	// if err != nil {
+	// 	app.serverError(w, err) //use serverError helper
+	// 	return
+	// }
+	// err = ts.Execute(w, nil)
+	// if err != nil {
+	// 	app.serverError(w, err) //use serverError helper
+	// }
+}
 
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -96,10 +97,33 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	// Write the snippet data as a plain-text HTTP response body.
-	fmt.Fprintf(w, "%v", s)
-	// fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
+	// init a sloce containing the paths to the show.page.tmpl file,
+	// plus the base layout and footer partial that we made earlier
+
+	files := []string{
+		"/ui/html/show.page.tmpl",
+		"/ui/html/base.layout.tmpl",
+		"/ui/html/footer.partial.tmpl",
+	}
+	//parse the template files...
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	//and then execute them. notice we are passing in the snippet data (a models.Snippet struct)
+	// as the final parameter
+	err = ts.Execute(w, s)
+	if err != nil {
+		app.serverError(w, err)
+	}
 }
+
+// 	// Write the snippet data as a plain-text HTTP response body.
+// 	fmt.Fprintf(w, "%v", s)
+// 	// fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
+// }
 
 // func downloadHandler(w http.ResponseWriter, r *http.Request) {
 // 	http.ServeFile(w, r, "./ui/static/file.zip")
