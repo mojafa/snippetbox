@@ -23,10 +23,11 @@ type application struct {
 }
 
 func main() {
+	dsn := flag.String("dsn", "web:pass@/snippetbox?parseTime=true", "MySQL data source name")
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	// Define a new command-line flag for the MySQL DSN string.
-	dsn := flag.String("dsn", "web:pass@/snippetbox?parseTime=true", "MySQL data source name")
 	flag.Parse()
+
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime|log.LUTC)
 	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.LUTC|log.Lshortfile)
 
@@ -45,6 +46,9 @@ func main() {
 		infoLog:  infoLog,
 		snippets: &mysql.SnippetModel{DB: db},
 	}
+
+	// Use the http.NewServeMux() function to initialize a new servemux, then
+	// register the home function as the handler for the "/" URL pattern.
 	srv := &http.Server{
 		Addr:     *addr,
 		ErrorLog: errorLog,
