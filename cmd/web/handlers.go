@@ -70,8 +70,12 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 	// w.Write([]byte("Create a new snippet..."))
 	// Create some variables holding dummy data. We'll remove these later on
 	// 	during the build.
-	title := "1984"
-	content := "George Orwells best big brother"
+	// title := "1984"
+	// content := "George Orwells best big brother"
+	// expires := "7"
+
+	title := "O snail"
+	content := "O snail\nClimb Mount Fuji,\nBut slowly, slowly!\n\n– Kobayashi Issa"
 	expires := "7"
 
 	// Pass the data to the SnippetModel.Insert() method, receiving the
@@ -86,6 +90,6 @@ func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func downloadHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./ui/static/file.zip")
-}
+// func downloadHandler(w http.ResponseWriter, r *http.Request) {
+// 	http.ServeFile(w, r, "./ui/static/file.zip")
+// }
