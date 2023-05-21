@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"mojafa/snippetbox/pkg/models"
 	"net/http"
 	"strconv"
 	"text/template"
@@ -33,7 +35,20 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
-	fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
+	// Use the SnippetModel object's Get method to retrieve the data for a // specific record based on its ID. If no matching record is found,
+	// return a 404 Not Found response.
+	s, err := app.snippets.Get(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+	// Write the snippet data as a plain-text HTTP response body.
+	fmt.Fprintf(w, "%v", s)
+	// fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
 }
 
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
