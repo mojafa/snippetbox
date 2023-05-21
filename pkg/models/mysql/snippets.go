@@ -39,7 +39,7 @@ func (m *SnippetModel) Get(id int) (*models.Snippet, error) {
 
 	// Use the QueryRow() method on the connection pool to execute our
 	// SQL statement, passing in the untrusted id variable as the value for the
-	// placeholder parameter. This returns a pointer to a sql.Row object which 
+	// placeholder parameter. This returns a pointer to a sql.Row object which
 	// holds the result from the database.
 	row := m.DB.QueryRow(stmt, id)
 	// Initialize a pointer to a new zeroed Snippet struct.
@@ -61,6 +61,17 @@ func (m *SnippetModel) Get(id int) (*models.Snippet, error) {
 			return nil, err
 		}
 	}
+
+	// shorthand query selector
+	// s := &models.Snippet{}
+	// err := m.DB.QueryRow("SELECT id, title, content, created, expires FROM snippets WHERE expires > UTC_TIMESTAMP() AND id = ?", id).Scan(&s.ID, &s.Title, &s.Content, &s.Created, &s.Expires)
+	// if err != nil {
+	// 	if errors.Is(err, sql.ErrNoRows) {
+	// 		return nil, models.ErrNoRecord
+	// 	} else {
+	// 		return nil, err
+	// 	}
+	// }
 	// If everything went OK then return the Snippet object.
 	return s, nil
 }
