@@ -6,7 +6,6 @@ import (
 	"mojafa/snippetbox/pkg/models"
 	"net/http"
 	"strconv"
-	"text/template"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -14,22 +13,32 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w) //use notFound helper
 		return
 	}
-	files := []string{
-		"./ui/html/home.page.tmpl",
-		"./ui/html/base.layout.tmpl",
-		"./ui/html/footer.partial.tmpl",
-	}
-	ts, err := template.ParseFiles(files...)
+
+	s, err := app.snippets.Latest()
 	if err != nil {
-		app.serverError(w, err) //use serverError helper
+		app.serverError(w, err)
 		return
 	}
-	err = ts.Execute(w, nil)
-	if err != nil {
-		app.serverError(w, err) //use serverError helper
+
+	for _, snippet := range s {
+		fmt.Fprintf(w, "%v\n", snippet)
 	}
 }
 
+// files := []string{
+// 	"./ui/html/home.page.tmpl",
+// 	"./ui/html/base.layout.tmpl",
+// 	"./ui/html/footer.partial.tmpl",
+// }
+// ts, err := template.ParseFiles(files...)
+// if err != nil {
+// 	app.serverError(w, err) //use serverError helper
+// 	return
+// }
+// err = ts.Execute(w, nil)
+// if err != nil {
+// 	app.serverError(w, err) //use serverError helper
+// }
 
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -75,7 +84,7 @@ func (app *application) showSnippet(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
-	// Use the SnippetModel object's Get method to retrieve the data for a 
+	// Use the SnippetModel object's Get method to retrieve the data for a
 	// specific record based on its ID. If no matching record is found,
 	// return a 404 Not Found response.
 	s, err := app.snippets.Get(id)
