@@ -17,7 +17,7 @@ type SnippetModel struct {
 func (m *SnippetModel) Insert(title, content, expires string) (int, error) {
 	stmt := `INSERT INTO snippets (title, content, created, expires) VALUES(?,?,UTC_TIMESTAMP(),DATE_ADD(UTC_TIMESTAMP(),INTERVAL ? DAY))`
 
-	// Use the Exec() method on the embedded connection pool to execute // statement. The first parameter is the SQL statement, followed by // title, content and expiry values for the placeholder parameters. // method returns a sql.Result object, which contains some basic
+	// Use the Exec() method on the embedded connection pool to execute statement. The first parameter is the SQL statement, followed by // title, content and expiry values for the placeholder parameters. // method returns a sql.Result object, which contains some basic
 	// information about what happened when the statement was executed.
 	result, err := m.DB.Exec(stmt, title, content, expires)
 	if err != nil {
