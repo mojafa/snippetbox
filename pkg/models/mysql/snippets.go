@@ -1,5 +1,7 @@
 package mysql
 
+// To use this model in our handlers we need to establish a new SnippetModel struct in main()
+// and then inject it as a dependency via the application struct
 import (
 	"database/sql"
 	"errors"
@@ -111,15 +113,14 @@ func (m *SnippetModel) Latest() ([]*models.Snippet, error) {
 		snippets = append(snippets, s)
 	}
 
-		// When the rows.Next() loop has finished we call rows.Err() to retrieve any
-		// error that was encountered during the iteration. It's important to
-		// call this - don't assume that a successful iteration was completed
-		// over the whole resultset.
-		if err = rows.Err(); err != nil {
-			return nil, err
-		}
-		// If everything went OK then return the Snippets slice.
-		return snippets, nil
-
+	// When the rows.Next() loop has finished we call rows.Err() to retrieve any
+	// error that was encountered during the iteration. It's important to
+	// call this - don't assume that a successful iteration was completed
+	// over the whole resultset.
+	if err = rows.Err(); err != nil {
+		return nil, err
 	}
+	// If everything went OK then return the Snippets slice.
+	return snippets, nil
 
+}
