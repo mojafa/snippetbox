@@ -64,10 +64,15 @@ func main() {
 }
 
 func openDB(dsn string) (*sql.DB, error) {
+	// sql.Open is used to just initialize the pool
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return nil, err
 	}
+
+	// verify that everything is set up correctly
+	// we use the db.Ping() method to create a connection and
+	// check for any errors.
 
 	if err = db.Ping(); err != nil {
 		return nil, err
@@ -76,26 +81,3 @@ func openDB(dsn string) (*sql.DB, error) {
 	return db, nil
 
 }
-
-// type neuteredFileSystem struct {
-// 	fs http.FileSystem
-// }
-
-// func (nfs neuteredFileSystem) Open(path string) (http.File, error) {
-// 	f, err := nfs.fs.Open(path)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	s, err := f.Stat()
-// 	if s.IsDir() {
-// 		index := filepath.Join(path, "index.html")
-// 		if _, err := nfs.fs.Open(index); err != nil {
-// 			closeErr := f.Close()
-// 			if closeErr != nil {
-// 				return nil, closeErr
-// 			}
-// 			return nil, err
-// 		}
-// 	}
-// 	return f, nil
-// }
