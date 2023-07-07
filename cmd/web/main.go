@@ -41,6 +41,7 @@ func main() {
 	// before the main() function exits.
 	defer db.Close()
 
+	// Initialize a mysql.SnippetModel instance and add it to the application dependencies.
 	app := &application{
 		errorLog: errorLog,
 		infoLog:  infoLog,
